@@ -9,7 +9,7 @@ import java.util.Map;
 @RestController
 public class button {
 
-    @RequestMapping(value = "/keyboard", method = RequestMethod.GET)
+    @RequestMapping(value = "/keyboard", method = RequestMethod.POST)
     public String keyboard() {
         System.out.println("/keyboard");
 
