@@ -56,7 +56,6 @@
 스킬 서버는 카카오 봇 시스템에서 받은 요청을 처리해 적절한 응답을 반환한다.
 각각의 요청은 HTTP POST 메서드를 통해 전달되고 JSON형태로 데이터를 주고받습니다.
 
-
 ### Spring을 통해 개발
 스프링 기본 개념
 Spring Boot 애플리케이션에서는 보통 다음과 같은 패턴을 따릅니다:
@@ -77,8 +76,89 @@ Repository (리포지토리):
 
 컨트롤러, 서비스, 리포지토리는 @Controller, @Service, @Repository 어노테이션을 사용하여 Spring에게 해당 클래스가 어떤 역할을 하는지 알려주고, Spring이 이들을 관리하도록 합니다. 이렇게 스프링은 컴포넌트들을 스캔하고 애플리케이션을 실행시켜 컨트롤러를 통해 클라이언트 요청을 처리하며, 서비스와 리포지토리를 활용하여 비즈니스 로직과 데이터베이스 조작을 수행합니다.
 
-
-build.gradle로 의존성을 추가합니다
+build.gradle로 의존성을 추가합니다.
 
 application.properties로 서버 및 데이터베이스 정보를 입력합니다.
+
+### 스프링으로 카카오톡 채팅창에 버튼만들기
+
+스프링(Spring)을 사용하여 카카오톡 채팅창에 버튼을 띄우기 위해서는 카카오톡 플러스친구 API를 호출하여 메시지를 보내야 합니다.
+
+<dependencies>
+    <!-- 다른 의존성들 -->
+    <dependency>
+        <groupId>com.google.code.gson</groupId>
+        <artifactId>gson</artifactId>
+        <version>2.8.8</version>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+</dependencies>
+KakaoChatbotController.java:
+java
+Copy code
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.web.client.RestTemplate;
+
+@RestController
+public class KakaoChatbotController {
+
+    @Value("${kakao.api.key}")
+    private String kakaoApiKey;
+
+    @PostMapping("/send-message")
+    public ResponseEntity<String> sendMessage(@RequestBody String userId) {
+        String sendMessageUrl = "https://kapi.kakao.com/v2/api/talk/memo/default/send";
+
+        String messageJson = generateMessageJson(userId);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Authorization", "Bearer " + kakaoApiKey);
+
+        HttpEntity<String> request = new HttpEntity<>(messageJson, headers);
+        RestTemplate restTemplate = new RestTemplate();
+
+        ResponseEntity<String> response = restTemplate.postForEntity(sendMessageUrl, request, String.class);
+        return response;
+    }
+
+    private String generateMessageJson(String userId) {
+        // 메시지 JSON 생성 및 버튼 정보 설정
+        String messageJson = "{"
+            + "\"object_type\": \"text\","
+            + "\"text\": \"버튼을 눌러주세요!\","
+            + "\"link\": {"
+                + "\"web_url\": \"https://www.example.com\""
+            + "},"
+            + "\"buttons\": ["
+                + "{"
+                    + "\"label\": \"버튼 1\","
+                    + "\"action\": \"webLink\","
+                    + "\"webLinkUrl\": \"https://www.example.com/button1\""
+                + "},"
+                + "{"
+                    + "\"label\": \"버튼 2\","
+                    + "\"action\": \"webLink\","
+                    + "\"webLinkUrl\": \"https://www.example.com/button2\""
+                + "}"
+            + "]"
+        + "}";
+
+        return messageJson;
+    }
+}
+
+위 코드는 스프링 부트에서 작동하는 간단한 REST 컨트롤러 예제입니다. 요청이 들어오면 해당 사용자에게 버튼이 포함된 메시지를 보내는 역할을 합니다.
+
+위 코드에서 ${kakao.api.key} 부분은 카카오톡 API 키가 저장되어 있는 환경 변수나 설정 파일에서 값을 가져오는 것을 가정하고 있습니다.
+
 
