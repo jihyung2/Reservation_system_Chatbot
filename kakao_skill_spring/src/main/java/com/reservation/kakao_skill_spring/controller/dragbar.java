@@ -9,24 +9,26 @@ public class dragbar {
 
     @PostMapping("/webhook")
     public KakaoResponse webhook(@RequestBody KakaoRequest kakaoRequest) {
-        KakaoResponse kakaoResponse = new KakaoResponse();
-
-        // 사용자로부터 받은 메시지 내용
         String userMessage = kakaoRequest.getContent();
+
+        KakaoMessage message = null;
 
         if ("버튼을 누르면 드래그바를 표시합니다".equals(userMessage)) {
             // 드래그바 항목 생성
+            KakaoButton[] buttons = new KakaoButton[2];
+            buttons[0] = new KakaoButton("webLink", "홈페이지로 이동", "http://www.example.com");
+            buttons[1] = new KakaoButton("message", "메세지 전송", "hello");
+
             KakaoDragBar dragBar = new KakaoDragBar("총 전류 선택", 0, 10, 1);
 
             // 응답 메시지 생성
-            KakaoMessage message = new KakaoMessage("drag", "전류를 선택하세요.", dragBar);
+            message = new KakaoMessage("drag", buttons, dragBar);
 
-            kakaoResponse.setMessage(message);
         } else {
             // 기타 로직 처리
             // ...
         }
-
+        KakaoResponse kakaoResponse = new KakaoResponse(message);
         return kakaoResponse;
     }
 }
