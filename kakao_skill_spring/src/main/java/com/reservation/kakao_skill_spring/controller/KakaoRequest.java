@@ -22,7 +22,7 @@ public class KakaoRequest {
     public String getId() {return id;}
     public void setId(String id) {this.id = id;}
 
-    public KakaoRequest(String userKey, String type, String content){
+    public KakaoRequest(String userKey, String type, String content, String id, String name){
         super();
         this.userKey = userKey;
         this.type = type;
