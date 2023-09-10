@@ -12,7 +12,10 @@ public class dragbar {
         String userMessage = kakaoRequest.getContent();
 
         KakaoMessage message = null;
-
+        System.out.println(kakaoRequest.getContent());
+        System.out.println(kakaoRequest.getUserKey());
+        System.out.println(kakaoRequest.getType());
+        System.out.println(userMessage);
         if ("버튼을 누르면 드래그바를 표시합니다".equals(userMessage)) {
             // 드래그바 항목 생성
             KakaoButton[] buttons = new KakaoButton[2];
