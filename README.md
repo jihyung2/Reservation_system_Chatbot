@@ -162,3 +162,6 @@ public class KakaoChatbotController {
 위 코드에서 ${kakao.api.key} 부분은 카카오톡 API 키가 저장되어 있는 환경 변수나 설정 파일에서 값을 가져오는 것을 가정하고 있습니다.
 
 
+스킬서버 구성을 다시 생각해봐야할 수 도있다고 생각이 됩니다.
+
+
