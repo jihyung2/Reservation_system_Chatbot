@@ -1,5 +1,7 @@
 package com.reservation.kakao_skill_spring.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -8,14 +10,19 @@ import org.springframework.web.bind.annotation.RestController;
 public class dragbar {
 
     @PostMapping("/webhook")
-    public KakaoResponse webhook(@RequestBody KakaoRequest kakaoRequest) {
+    public KakaoResponse webhook(@RequestBody KakaoRequest kakaoRequest) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String userjson = objectMapper.writeValueAsString(kakaoRequest);
+
         String userMessage = kakaoRequest.getContent();
 
         KakaoMessage message = null;
+        System.out.println(userjson);
         System.out.println(kakaoRequest.getContent());
         System.out.println(kakaoRequest.getUserKey());
         System.out.println(kakaoRequest.getType());
-        System.out.println(userMessage);
+        System.out.println(kakaoRequest.getName());
+        System.out.println(kakaoRequest.getId());
         if ("버튼을 누르면 드래그바를 표시합니다".equals(userMessage)) {
             // 드래그바 항목 생성
             KakaoButton[] buttons = new KakaoButton[2];
@@ -34,4 +41,5 @@ public class dragbar {
         KakaoResponse kakaoResponse = new KakaoResponse(message);
         return kakaoResponse;
     }
+
 }
