@@ -75,12 +75,18 @@ public class Request {
                 try {
                     int number = Integer.parseInt(userresponse);
                     System.out.println(userresponse);
+                    if( dbService.getSearchDB(userresponse).isEmpty()) {
+                        usernum.put(userid, "2");
+                        simpleText.put("text", "예약할 전 목록을 보내주세요!\n*만원 단위로 작성해주시면 됩니다. 김치전, 부추전은 예약하실 수 없습니다.\n ex) 동태전 3만원, 꼬지전 2만원, 동그랑땡 5만원 ");
+                        // 필요한 경우 다른 필드들도 설정해주세요.
+                        userinfo.put(userid, userresponse);
+                    }
+                    else {
+                        simpleText.put("text", "이미 예약을 하셨습니다. \n다시 예약을 하시면 기존 예약 내용은 지워지므로 한번에 추가해서 작성해주시기 바랍니다. \n\n예약할 전 목록을 보내주세요!\n*만원 단위로 작성해주시면 됩니다. 김치전, 부추전은 예약하실 수 없습니다.\n ex) 동태전 3만원, 꼬지전 2만원, 동그랑땡 5만원 ");
+                        userinfo.put(userid, userresponse);
+                        usernum.put(userid, "2");
 
-                    usernum.put(userid, "2");
-                    simpleText.put("text", "예약할 전 목록을 보내주세요!\n*만원 단위로 작성해주시면 됩니다. 김치전, 부추전은 예약하실 수 없습니다.\n ex) 동태전 3만원, 꼬지전 2만원, 동그랑땡 5만원 ");
-                    // 필요한 경우 다른 필드들도 설정해주세요.
-                    userinfo.put(userid, userresponse);
-
+                    }
                 }catch (Exception e){
                     simpleText.put("text", "숫자만 넣어주세요");
                     usernum.put(userid, "0");
@@ -130,8 +136,15 @@ public class Request {
                 try {
                     int number = Integer.parseInt(userresponse);
                     System.out.println(userresponse);
-                    simpleText.put("text", ""); // 수정부분 좀더 추가해야됨
-                    usernum.put(userid, "0");
+
+                    if( dbService.getSearchDB(userresponse).isEmpty()) {
+                        simpleText.put("text", "수정할 데이터가 없습니다.");
+                    }
+                    else {
+
+                        simpleText.put("text", dbService.getSearchDB(userresponse).toString() + "\n\n수정할 예약 내용으로 다시 보내주세요 \n기존내용만 삭제됩니다. \n번호는 그대로 유지됩니다.");
+                        usernum.put(userid, "6");
+                    }
 
 
                 } catch (Exception e) {
@@ -139,6 +152,22 @@ public class Request {
 
                 }
             }
+
+            else if (usernum.get(userid) == "6"){
+                try {
+                    simpleText.put("text", "전 예약 내용 수정 완료!");
+                    usernum.put(userid, "0");
+                    data.setId(userid);
+                    data.setNumber(userinfo.get(userid));
+                    data.setText(userresponse);
+                    dbService.saveDB(data);
+
+                }catch (Exception e) {
+                    e.printStackTrace();
+                    simpleText.put("text", "전 예약 수정 단계에서 에러가 발생했습니다. 에러 메시지: ");
+                }
+            }
+
             else if (usernum.get(userid) == "4" && userresponse.equals("조회")) {
                 try {
                     simpleText.put("text", "조회할 번호를 입력해주세요 \nex)01012345678");
