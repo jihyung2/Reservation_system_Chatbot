@@ -1,5 +1,62 @@
 # Reservation_system_Chatbot
 
+**팀 구성**
+- 한밭대학교 이지형
+
+## <u>Teamate</u> Project Background
+- ### 필요성 및 문제점
+  - 부모님의 가게에서 예약 관리에 큰 고충을 느낌 특히 예약 변경 및 취소 부분에서 고객들의 요구를 신속하게 반영하는 것에 어려움을 느낌
+  - 예약관리를 수기로 작성하시기 때문에 예약 변경 및 취소부분에서 일일히 찾아서 손으로 수정하는 비 효율적인 운영이 이루어짐
+    
+- ### 해결책
+  - 캡스톤 1 프로젝트에서 얻은 서버 운영 지식과 챗봇 개발 노하우를 활용하여 카카오톡 예약 챗봇 개발
+  - 챗봇을 개발하여 예약시 데이터베이스에 저장되고 예약 변경 및 취소 부분을 데이터베이스로 관리
+  
+## System Design
+  - ### System Requirements
+    - 데이터베이스를 활용하여 예약 정보 관리
+    - 손님 연령층을 고려하여 쉽게 접근할 수 있는 카카오톡 챗봇 선택
+    - 손님들이 쉽게 사용하실수 있도록 안내사항 및 사용방법 자세히 설명
+	
+   - ### 실제 작동
+![예약](https://github.com/jihyung2/Simulation_Engine_for_Web-Based_Simulation_Environments/assets/108830942/43f6b523-90f5-46f0-afb4-0b284871e6c7)
+![수정](https://github.com/jihyung2/Simulation_Engine_for_Web-Based_Simulation_Environments/assets/108830942/c580997f-41ef-477e-abba-a67976266815)
+
+     
+## 💻 Tech Stack
+<h4> Platforms & Languages </h4>
+
+<div align="left">
+	<img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=java&logoColor=white"> 
+    <img src="https://img.shields.io/badge/mariaDB-003545?style=for-the-badge&logo=mariaDB&logoColor=white">
+    <img src="https://img.shields.io/badge/spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white">
+    <img src="https://img.shields.io/badge/jpa-000000?style=for-the-badge&logo=jpa&logoColor=white">
+    <img src="https://img.shields.io/badge/gradle-02303A?style=for-the-badge&logo=gradle&logoColor=white">
+	
+</div>
+
+<h4> Tools </h4>
+<div align=left>
+	<img src="https://img.shields.io/badge/Intellij%20IDE-000000?style=flat&logo=intellijidea&logoColor=white" />
+	<img src="https://img.shields.io/badge/PyCharm-000000?style=flat-square&logo=PyCharm&logoColor=white"/>
+    <img src="https://img.shields.io/badge/Visual Studio Code-007ACC?style=flat-square&logo=Visual Studio Code&logoColor=white"/>
+	<img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=GitHub&logoColor=white" />
+</div>
+  
+## Conclusion
+  - 명절날마다 예약관리로 힘들었지만 챗봇으로 일정부분을 담당하여 관리가 훨신 수월해짐
+  - 예약관리 부분 중 고충인 예약 변경 및 취소부분을 데이터베이스로 쉽게 관리
+  - 고객이 스스로 예약 내용을 변경하고, 예약 조회가 가능
+
+## 구현기능
+  - 예약하기
+  - 예약 조회 및 수정
+
+## 고려사항
+  - 예약한 사람이 또 예약을 할시엔 어떻게 할것인가 -> 예약 테이블의 기본키를 휴대폰번호로 했기 때문에 한 내용밖에 담지 못함 -> 예약을 추가로 하는 사람은 한번에 작성해달라고 안내 ( 향후 고려, 임시 방편 )
+  - 전 종류가 많기 때문에 어떤 방식을 선택하여 예약을 받을것인가? ( 버튼 등 ) -> 예약관리가 메인 목적이기 때문에 문자로 받는것처럼 텍스트 위주로 받고, 예약도 텍스트 방식을 선택 ( 향후 버튼식이나 다른 방향 고려 )
+
+## 개발 과정
 5/28 작성
 
 9월 달안에 완성해야할 챗봇 예약 시스템
@@ -82,97 +139,8 @@ build.gradle로 의존성을 추가합니다.
 
 application.properties로 서버 및 데이터베이스 정보를 입력합니다.
 
-### 스프링으로 카카오톡 채팅창에 버튼만들기
-
-스프링(Spring)을 사용하여 카카오톡 채팅창에 버튼을 띄우기 위해서는 카카오톡 플러스친구 API를 호출하여 메시지를 보내야 합니다.
-
-<dependencies>
-    <!-- 다른 의존성들 -->
-    <dependency>
-        <groupId>com.google.code.gson</groupId>
-        <artifactId>gson</artifactId>
-        <version>2.8.8</version>
-    </dependency>
-    <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-web</artifactId>
-    </dependency>
-</dependencies>
-KakaoChatbotController.java:
-java
-Copy code
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.web.client.RestTemplate;
-
-@RestController
-public class KakaoChatbotController {
-
-    @Value("${kakao.api.key}")
-    private String kakaoApiKey;
-
-    @PostMapping("/send-message")
-    public ResponseEntity<String> sendMessage(@RequestBody String userId) {
-        String sendMessageUrl = "https://kapi.kakao.com/v2/api/talk/memo/default/send";
-
-        String messageJson = generateMessageJson(userId);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("Authorization", "Bearer " + kakaoApiKey);
-
-        HttpEntity<String> request = new HttpEntity<>(messageJson, headers);
-        RestTemplate restTemplate = new RestTemplate();
-
-        ResponseEntity<String> response = restTemplate.postForEntity(sendMessageUrl, request, String.class);
-        return response;
-    }
-
-    private String generateMessageJson(String userId) {
-        // 메시지 JSON 생성 및 버튼 정보 설정
-        String messageJson = "{"
-            + "\"object_type\": \"text\","
-            + "\"text\": \"버튼을 눌러주세요!\","
-            + "\"link\": {"
-                + "\"web_url\": \"https://www.example.com\""
-            + "},"
-            + "\"buttons\": ["
-                + "{"
-                    + "\"label\": \"버튼 1\","
-                    + "\"action\": \"webLink\","
-                    + "\"webLinkUrl\": \"https://www.example.com/button1\""
-                + "},"
-                + "{"
-                    + "\"label\": \"버튼 2\","
-                    + "\"action\": \"webLink\","
-                    + "\"webLinkUrl\": \"https://www.example.com/button2\""
-                + "}"
-            + "]"
-        + "}";
-
-        return messageJson;
-    }
-}
-
-위 코드는 스프링 부트에서 작동하는 간단한 REST 컨트롤러 예제입니다. 요청이 들어오면 해당 사용자에게 버튼이 포함된 메시지를 보내는 역할을 합니다.
-
-위 코드에서 ${kakao.api.key} 부분은 카카오톡 API 키가 저장되어 있는 환경 변수나 설정 파일에서 값을 가져오는 것을 가정하고 있습니다.
-
-
-스킬서버 구성을 다시 생각해봐야할 수 도있다고 생각이 됩니다.
-
-
 ### 10/31 개편
 
 기존의 챗봇은 Restapi 서버를 많이 사용하지 않는 구조로, 정해진 목록만을 예약할 수 있었지만,
 이러한 방식은 종류가 제한되기 때문에 불편한 구조를 가지고 있다.
-
-
-
 그래서 카카오톡 챗봇에서 사용자에게 텍스트의 형태를 입력받아서 그부분을 전달해드리면 기존 문제점도 해결될 것 으로 예상됨
-
