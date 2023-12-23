@@ -1,7 +1,7 @@
 # Reservation_system_Chatbot
 
 **팀 구성**
-- 한밭대학교 이지형
+- 한밭대학교 컴퓨터공학과 이지형
 
 ## <u>Teamate</u> Project Background
 - ### 필요성 및 문제점
